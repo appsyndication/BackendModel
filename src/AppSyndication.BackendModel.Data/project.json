@@ -1,0 +1,16 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "AppSyndication Backend Model Data Class Library",
+  "authors": [ "AppSyndication Team" ],
+  "tags": [ "appsyndication", "backend", "model" ],
+  "projectUrl": "https://github.com/appsyndication/BackendModel",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "WindowsAzure.Storage": "6.2.0"
+  },
+
+  "frameworks": {
+    "net451": { }
+  }
+}

@@ -1,0 +1,44 @@
+-
+  branches:
+    only:
+      - master
+
+  version: 1.0.0-build{build}
+  configuration: Release
+  assembly_info:
+    patch: true
+    file: '**\AssemblyInfo.*'
+    assembly_version: '1.0.0.{build}'
+    assembly_file_version: '1.0.0.{build}'
+
+  environment:
+    DNX_BUILD_VERSION: build%APPVEYOR_BUILD_NUMBER%
+
+  before_build:
+  - cmd: dnu restore .
+
+  artifacts:
+  - path: artifacts\bin\**\*.nupkg
+
+  nuget:
+    account_feed: true
+    project_feed: true
+    disable_publish_on_pr: true
+
+-
+  version: 1.0.0-build{build}-{branch}
+  configuration: Debug
+
+  environment:
+    DNX_BUILD_VERSION: build%APPVEYOR_BUILD_NUMBER%-%APPVEYOR_REPO_BRANCH%
+
+  before_build:
+  - cmd: dnu restore .
+
+  artifacts:
+  - path: artifacts\bin\**\*.nupkg
+
+  nuget:
+    account_feed: true
+    project_feed: true
+    disable_publish_on_pr: true

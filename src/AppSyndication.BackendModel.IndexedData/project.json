@@ -1,0 +1,19 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "AppSyndication Backend Model Indexed Data Class Library",
+  "authors": [ "Rob Mensching" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "dependencies": {
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-*",
+    "Microsoft.Extensions.Caching.Memory": "1.0.0-rc1-*",
+    "AppSyndication.BackendModel.Data": "1.0.0-*",
+    "Lucene.Net.Store.Azure": "3.0.5553.21100"
+  },
+
+  "frameworks": {
+    "net451": { }
+  }
+}
