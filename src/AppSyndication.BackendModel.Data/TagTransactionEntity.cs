@@ -14,23 +14,40 @@ namespace AppSyndication.BackendModel.Data
 
     public class TagTransactionEntity : TableEntity
     {
+        private static int Uniquifier = 0;
+
         public TagTransactionEntity() { }
 
-        public TagTransactionEntity(TagTransactionOperation operation, string channel, string transactionId, string blobUri)
+        public TagTransactionEntity(TagTransactionOperation operation, string channel, string alias, string username)
         {
+            if (String.IsNullOrEmpty(alias)) throw new ArgumentNullException(nameof(alias));
+            if (String.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
+
+            channel = String.IsNullOrEmpty(channel) ? "@" : channel;
+
+            var now = DateTime.UtcNow.ToString("yyyy-MMdd-HHmm-ss");
+
+            var uniquifier = Uniquifier++;
+
+            var transactionId = $"{username}|{now}-{uniquifier % 10000}";
+
             this.PartitionKey = TagTransactionEntity.CalculatePartitionKey(channel, transactionId);
             this.RowKey = TagTransactionEntity.CalculateRowKey();
 
             this.Channel = channel;
+            this.Alias = alias;
+            this.Username = username;
             this.Id = transactionId;
 
             this.Operation = operation.ToString();
-            this.StagedBlobUri = blobUri;
+            this.StagedBlobUri = $"{channel}/{alias}/{transactionId}";
         }
 
         public string Channel { get; set; }
 
-        public string AliasOverride { get; set; }
+        public string Alias { get; set; }
+
+        public string Username { get; set; }
 
         public string Id { get; set; }
 

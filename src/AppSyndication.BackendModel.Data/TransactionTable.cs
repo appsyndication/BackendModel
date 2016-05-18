@@ -4,14 +4,14 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AppSyndication.BackendModel.Data
 {
-    public class TransactionTable : TableBase
+    internal class TransactionTable : TableBase, ITagTransactionTable
     {
-        public TransactionTable(Connection connection, bool ensureExists, ref bool alreadyExists)
-            : base(StorageName.TransactionTable, connection, ensureExists, ref alreadyExists)
+        internal TransactionTable(ITagStorageConnection connection)
+            : base(StorageName.TransactionTable, connection)
         {
         }
 
-        public virtual TransactionSystemInfoEntity GetSystemInfo()
+        public TransactionSystemInfoEntity GetSystemInfo()
         {
             var op = TableOperation.Retrieve<TransactionSystemInfoEntity>(TransactionSystemInfoEntity.PartitionKeyValue, TransactionSystemInfoEntity.RowKeyValue);
 
@@ -20,7 +20,7 @@ namespace AppSyndication.BackendModel.Data
             return (TransactionSystemInfoEntity)result.Result ?? new TransactionSystemInfoEntity();
         }
 
-        public virtual RedirectEntity GetRedirect(string redirectKey)
+        public RedirectEntity GetRedirect(string redirectKey)
         {
             var op = TableOperation.Retrieve<RedirectEntity>(redirectKey, String.Empty);
 
@@ -29,7 +29,7 @@ namespace AppSyndication.BackendModel.Data
             return (RedirectEntity)result.Result;
         }
 
-        public virtual async Task<TagTransactionEntity> GetTagTransactionAsync(string channel, string transactionId)
+        public async Task<TagTransactionEntity> GetTagTransactionAsync(string channel, string transactionId)
         {
             var partitionKey = TagTransactionEntity.CalculatePartitionKey(channel, transactionId);
 
@@ -42,7 +42,17 @@ namespace AppSyndication.BackendModel.Data
             return (TagTransactionEntity)result.Result;
         }
 
-        public virtual async Task AddTagTransactionErrorMessageAsync(TagTransactionEntity entity, string message)
+        public async Task AddTagTransactionErrorMessageAsync(string channel, string transactionId, string message)
+        {
+            var txTag = await this.GetTagTransactionAsync(channel, transactionId);
+
+            if (txTag != null)
+            {
+                await AddTagTransactionErrorMessageAsync(txTag, message);
+            }
+        }
+
+        public async Task AddTagTransactionErrorMessageAsync(TagTransactionEntity entity, string message)
         {
             var change = this.Batch();
 

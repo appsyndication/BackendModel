@@ -1,73 +1,85 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AppSyndication.BackendModel.Data.Azure;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AppSyndication.BackendModel.Data
 {
-    public abstract class TableBase
+    public abstract class TableBase : ITableBase
     {
-        protected TableBase(string tableName, Connection connection, bool ensureExists, ref bool alreadyExists)
+        private bool _exists;
+
+        protected TableBase(string tableName, ITagStorageConnection connection)
         {
-            var tables = connection.AccessTables();
+            var tables = connection.ConnectToTagStorage().CreateCloudTableClient();
 
             this.Table = tables.GetTableReference(tableName);
-
-            if (ensureExists && !alreadyExists)
-            {
-                this.Table.CreateIfNotExists();
-                alreadyExists = true;
-            }
-
-            this.Connection = connection;
         }
-
-        protected Connection Connection { get; }
 
         protected CloudTable Table { get; }
 
         public AzureBatch Batch()
         {
-            return new AzureBatch(this.Table);
+            return new AzureBatch(this);
         }
 
         public async Task Create(ITableEntity entity)
         {
             var op = TableOperation.Insert(entity);
 
-            await this.Table.ExecuteAsync(op);
+            await this.ExecuteAsync(op);
         }
 
         public async Task CreateOrMergeAsync(ITableEntity entity)
         {
             var op = TableOperation.InsertOrMerge(entity);
 
-            await this.Table.ExecuteAsync(op);
+            await this.ExecuteAsync(op);
         }
 
         public async Task Update(ITableEntity entity)
         {
             var op = TableOperation.Merge(entity);
 
-            await this.Table.ExecuteAsync(op);
+            await this.ExecuteAsync(op);
         }
 
         public async Task Upsert(ITableEntity entity)
         {
             var op = TableOperation.InsertOrReplace(entity);
 
-            await this.Table.ExecuteAsync(op);
+            await this.ExecuteAsync(op);
         }
 
         public async Task Delete(ITableEntity entity)
         {
             var op = TableOperation.Delete(entity);
 
-            await this.Table.ExecuteAsync(op);
+            await this.ExecuteAsync(op);
         }
 
-        public Task<TableResult> ExecuteAsync(TableOperation operation)
+        public async Task<TableResult> ExecuteAsync(TableOperation operation)
         {
-            return this.Table.ExecuteAsync(operation);
+            await EnsureTableExistsAsync();
+
+            return await this.Table.ExecuteAsync(operation);
+        }
+
+        public async Task<IList<TableResult>> ExecuteBatchAsync(TableBatchOperation batch)
+        {
+            await EnsureTableExistsAsync();
+
+            return await this.Table.ExecuteBatchAsync(batch);
+        }
+
+        private async Task EnsureTableExistsAsync()
+        {
+            if (!_exists)
+            {
+                await this.Table.CreateIfNotExistsAsync();
+
+                _exists = true;
+            }
         }
     }
 }

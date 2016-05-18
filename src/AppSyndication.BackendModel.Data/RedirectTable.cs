@@ -5,23 +5,23 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AppSyndication.BackendModel.Data
 {
-    public class RedirectTable : TableBase
+    internal class RedirectTable : TableBase, IRedirectTable
     {
-        public RedirectTable(Connection connection, bool ensureExists, ref bool alreadyExists)
-            : base(StorageName.RedirectTable, connection, ensureExists, ref alreadyExists)
+        public RedirectTable(ITagStorageConnection connection)
+            : base(StorageName.RedirectTable, connection)
         {
         }
 
-        public virtual IEnumerable<RedirectEntity> GetAllRedirects()
+        public IEnumerable<RedirectEntity> GetAllRedirects()
         {
             var query = new TableQuery<RedirectEntity>();
 
-            var redirects = this.Table.ExecuteQuery(query);
+            var results = this.Table.ExecuteQuery(query);
 
-            return redirects;
+            return results;
         }
 
-        public virtual RedirectEntity GetRedirect(string redirectKey)
+        public RedirectEntity GetRedirect(string redirectKey)
         {
             var op = TableOperation.Retrieve<RedirectEntity>(redirectKey, String.Empty);
 
@@ -30,7 +30,7 @@ namespace AppSyndication.BackendModel.Data
             return (RedirectEntity)result.Result;
         }
 
-        public virtual async Task<RedirectEntity> GetRedirectAsync(string redirectKey)
+        public async Task<RedirectEntity> GetRedirectAsync(string redirectKey)
         {
             var op = TableOperation.Retrieve<RedirectEntity>(redirectKey, String.Empty);
 

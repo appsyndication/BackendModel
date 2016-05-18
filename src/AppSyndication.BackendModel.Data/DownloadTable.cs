@@ -6,14 +6,14 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AppSyndication.BackendModel.Data
 {
-    public class DownloadTable : TableBase
+    internal class DownloadTable : TableBase, IDownloadTable
     {
-        public DownloadTable(Connection connection, bool ensureExists, ref bool alreadyExists)
-            : base(StorageName.DownloadTable, connection, ensureExists, ref alreadyExists)
+        public DownloadTable(ITagStorageConnection connection)
+            : base(StorageName.DownloadTable, connection)
         {
         }
 
-        public virtual IEnumerable<DownloadEntity> GetDownloadsSince(DateTime? start)
+        public IEnumerable<DownloadEntity> GetDownloadsSince(DateTime? start)
         {
             var startOffset = new DateTimeOffset(start ?? AzureDateTime.Min);
 

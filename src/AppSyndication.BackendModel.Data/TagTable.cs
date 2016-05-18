@@ -5,14 +5,14 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace AppSyndication.BackendModel.Data
 {
-    public class TagTable : TableBase
+    internal class TagTable : TableBase, ITagTable
     {
-        public TagTable(Connection connection, bool ensureExists, ref bool alreadyExists)
-            : base(StorageName.TagTable, connection, ensureExists, ref alreadyExists)
+        public TagTable(ITagStorageConnection connection)
+            : base(StorageName.TagTable, connection)
         {
         }
 
-        public virtual async Task<TagEntity> GetTagAsync(string partitionKey, string rowKey)
+        public async Task<TagEntity> GetTagAsync(string partitionKey, string rowKey)
         {
             var op = TableOperation.Retrieve<TagEntity>(partitionKey, rowKey);
 
@@ -21,7 +21,7 @@ namespace AppSyndication.BackendModel.Data
             return (TagEntity)result.Result;
         }
 
-        public virtual async Task<TagEntity> GetPrimaryTagAsync(TagEntity tag)
+        public async Task<TagEntity> GetPrimaryTagAsync(TagEntity tag)
         {
             var partitionKey = TagEntity.CalculatePartitionKey(tag.Channel);
 

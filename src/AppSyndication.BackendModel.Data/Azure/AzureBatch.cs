@@ -6,14 +6,14 @@ namespace AppSyndication.BackendModel.Data.Azure
 {
     public class AzureBatch
     {
-        public AzureBatch(CloudTable table)
+        public AzureBatch(TableBase table)
         {
             this.Batch = new TableBatchOperation();
             this.Table = table;
             this.Tasks = new List<Task<IList<TableResult>>>();
         }
 
-        public CloudTable Table { get; }
+        public TableBase Table { get; }
 
         private TableBatchOperation Batch { get; set; }
 
@@ -63,20 +63,17 @@ namespace AppSyndication.BackendModel.Data.Azure
 
         private void ExecuteIfAnything()
         {
-            if (this.Batch.Count > 0)
-            {
-                var batch = this.Batch;
-
-                this.Batch = new TableBatchOperation();
-
-                var task = this.Table.ExecuteBatchAsync(batch);
-                this.Tasks.Add(task);
-            }
+            this.ExecuteIfExceedsLimit(0);
         }
 
         private void ExecuteIfNecessary()
         {
-            if (this.Batch.Count > 100)
+            this.ExecuteIfExceedsLimit(100);
+        }
+
+        private void ExecuteIfExceedsLimit(int limit)
+        {
+            if (this.Batch.Count > limit)
             {
                 var batch = this.Batch;
 

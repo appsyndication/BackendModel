@@ -23,11 +23,11 @@ namespace AppSyndication.BackendModel.IndexedData
 
         private readonly ILogger _logger;
 
-        private readonly Connection _connection;
+        private readonly ITagStorageConnection _connection;
 
         private int _totalTags;
 
-        public TagIndex(ILoggerFactory loggerFactory, IMemoryCache cache, Connection connection)
+        public TagIndex(ILoggerFactory loggerFactory, IMemoryCache cache, ITagStorageConnection connection)
         {
             _logger = loggerFactory.CreateLogger(typeof(TagIndex).FullName);
 
