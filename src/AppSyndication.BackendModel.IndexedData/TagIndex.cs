@@ -108,8 +108,6 @@ namespace AppSyndication.BackendModel.IndexedData
 
         public TagResults GetTags(int page = 1, int perPage = 0)
         {
-            var reader = this.GetIndexReader();
-
             if (page < 1)
             {
                 page = 1;
@@ -122,6 +120,8 @@ namespace AppSyndication.BackendModel.IndexedData
 
             var start = (page - 1) * perPage;
             var end = Math.Min(page * perPage, _totalTags);
+
+            var reader = this.GetIndexReader();
 
             var results = new TagResults();
             results.Page = page;
@@ -137,7 +137,11 @@ namespace AppSyndication.BackendModel.IndexedData
 
         public TagResults SearchTags(string query, int page = 1, int perPage = 0)
         {
-            var reader = this.GetIndexReader();
+            // If there is no query, don't search just return all the tags.
+            if (String.IsNullOrWhiteSpace(query))
+            {
+                return this.GetTags(page, perPage);
+            }
 
             if (page < 1)
             {
@@ -151,6 +155,8 @@ namespace AppSyndication.BackendModel.IndexedData
 
             var start = (page - 1) * perPage;
             var end = Math.Min(page * perPage, _totalTags);
+
+            var reader = this.GetIndexReader();
 
             using (var searcher = new IndexSearcher(reader))
             {
