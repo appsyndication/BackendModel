@@ -6,7 +6,7 @@ namespace AppSyndication.BackendModel.Data
 {
     internal class TransactionTable : TableBase, ITagTransactionTable
     {
-        internal TransactionTable(ITagStorageConnection connection)
+        public TransactionTable(ITagStorageConnection connection)
             : base(StorageName.TransactionTable, connection)
         {
         }
