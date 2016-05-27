@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AppSyndication.BackendModel.Data
 {
@@ -7,5 +8,7 @@ namespace AppSyndication.BackendModel.Data
         IEnumerable<RedirectEntity> GetAllRedirects();
 
         RedirectEntity GetRedirect(string redirectKey);
+
+        Task<RedirectEntity> GetRedirectAsync(string redirectKey);
     }
 }
