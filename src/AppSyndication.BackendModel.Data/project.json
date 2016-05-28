@@ -19,9 +19,9 @@
   "frameworks": {
     "netstandard1.5": {
       "imports": [
-        "net451"
+        "portable-net45+win8"
       ]
     },
-    "net451": { }
+    "net45": { }
   }
 }
