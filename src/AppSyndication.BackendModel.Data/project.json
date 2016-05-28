@@ -3,19 +3,23 @@
   "description": "AppSyndication Backend Model Data Class Library",
   "authors": [ "AppSyndication Team" ],
 
-  "dependencies": {
-    "NETStandard.Library": "1.5.0-rc2-24027",
-    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc2-final",
-    "WindowsAzure.Storage": "5.0.2"
-  },
-
-  "frameworks": {
-    "net461": { }
-  },
-
   "packOptions": {
     "tags": [ "appsyndication", "backend", "model" ],
     "projectUrl": "https://github.com/appsyndication/BackendModel",
     "licenseUrl": ""
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.5.0-rc2-24027",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc2-final",
+    "WindowsAzure.Storage": "7.0.2-preview"
+  },
+
+  "frameworks": {
+    "netstandard1.5": {
+      "imports": [
+        "portable-net45+win8"
+      ]
+    }
   }
 }

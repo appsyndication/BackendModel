@@ -1,8 +1,16 @@
 ﻿{
   "version": "1.0.0-*",
   "description": "AppSyndication Backend Model Indexed Data Class Library",
+  "authors": [ "AppSyndication Team" ],
+
+  "packOptions": {
+    "tags": [ "appsyndication", "backend", "model", "indexed" ],
+    "projectUrl": "https://github.com/appsyndication/BackendModel",
+    "licenseUrl": ""
+  },
 
   "dependencies": {
+    "NETStandard.Library": "1.5.0-rc2-24027",
     "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc2-final",
     "Microsoft.Extensions.Caching.Memory": "1.0.0-rc2-final",
     "AppSyndication.BackendModel.Data": "1.0.0-*",
@@ -10,12 +18,10 @@
   },
 
   "frameworks": {
-    "net461": { }
-  },
-
-  "packOptions": {
-    "tags": [ "appsyndication", "backend", "model", "indexed" ],
-    "projectUrl": "https://github.com/appsyndication/BackendModel",
-    "licenseUrl": ""
+    "netstandard1.5": {
+      "imports": [
+        "net45"
+      ]
+    }
   }
 }
