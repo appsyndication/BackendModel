@@ -13,7 +13,7 @@ namespace AppSyndication.BackendModel.Data
         {
         }
 
-        public IEnumerable<DownloadEntity> GetDownloadsSince(DateTime? start)
+        public async Task<IEnumerable<DownloadEntity>> GetDownloadsSinceAsync(DateTime? start)
         {
             var startOffset = new DateTimeOffset(start ?? AzureDateTime.Min);
 
@@ -21,7 +21,7 @@ namespace AppSyndication.BackendModel.Data
 
             var query = new TableQuery<DownloadEntity>().Where(filter);
 
-            return this.Table.ExecuteQuery(query);
+            return await this.ExecuteQueryAsync(query);
         }
 
         public async Task IncrementDownloadRedirectCountAsync(string key, string ip)

@@ -72,6 +72,24 @@ namespace AppSyndication.BackendModel.Data
             return await this.Table.ExecuteBatchAsync(batch);
         }
 
+        public async Task<List<T>> ExecuteQueryAsync<T>(TableQuery<T> query) where T : ITableEntity, new()
+        {
+            List<T> results = new List<T>();
+
+            TableContinuationToken token = null;
+
+            do
+            {
+                var segment = await this.Table.ExecuteQuerySegmentedAsync(query, token);
+
+                results.AddRange(segment.Results);
+
+                token = segment.ContinuationToken;
+            } while (token != null);
+
+            return results;
+        }
+
         private async Task EnsureTableExistsAsync()
         {
             if (!_exists)

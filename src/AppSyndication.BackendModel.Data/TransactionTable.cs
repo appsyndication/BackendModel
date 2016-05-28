@@ -11,22 +11,13 @@ namespace AppSyndication.BackendModel.Data
         {
         }
 
-        public TransactionSystemInfoEntity GetSystemInfo()
+        public async Task<TransactionSystemInfoEntity> GetSystemInfoAsync()
         {
             var op = TableOperation.Retrieve<TransactionSystemInfoEntity>(TransactionSystemInfoEntity.PartitionKeyValue, TransactionSystemInfoEntity.RowKeyValue);
 
-            var result = this.Table.Execute(op);
+            var result = await this.Table.ExecuteAsync(op);
 
             return (TransactionSystemInfoEntity)result.Result ?? new TransactionSystemInfoEntity();
-        }
-
-        public RedirectEntity GetRedirect(string redirectKey)
-        {
-            var op = TableOperation.Retrieve<RedirectEntity>(redirectKey, String.Empty);
-
-            var result = this.Table.Execute(op);
-
-            return (RedirectEntity)result.Result;
         }
 
         public async Task<TagTransactionEntity> GetTagTransactionAsync(string channel, string transactionId)

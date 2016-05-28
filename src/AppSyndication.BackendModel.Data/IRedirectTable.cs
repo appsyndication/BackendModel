@@ -5,9 +5,7 @@ namespace AppSyndication.BackendModel.Data
 {
     public interface IRedirectTable : ITableBase
     {
-        IEnumerable<RedirectEntity> GetAllRedirects();
-
-        RedirectEntity GetRedirect(string redirectKey);
+        Task<IEnumerable<RedirectEntity>> GetAllRedirectsAsync();
 
         Task<RedirectEntity> GetRedirectAsync(string redirectKey);
     }

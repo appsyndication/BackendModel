@@ -5,7 +5,7 @@ namespace AppSyndication.BackendModel.Data
 {
     public interface ITagTable : ITableBase
     {
-        IEnumerable<TagEntity> GetAllTags();
+        Task<IEnumerable<TagEntity>> GetAllTagsAsync();
 
         Task<TagEntity> GetTagAsync(string partitionKey, string rowKey);
 

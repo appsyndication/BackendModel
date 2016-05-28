@@ -34,20 +34,20 @@ namespace AppSyndication.BackendModel.Data
             return (TagEntity)result.Result;
         }
 
-        public IEnumerable<TagEntity> GetAllPrimaryTags()
+        public async Task<IEnumerable<TagEntity>> GetAllPrimaryTagsAsync()
         {
             var query = new TableQuery<TagEntity>().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, String.Empty));
 
-            var tags = this.Table.ExecuteQuery(query);
+            var tags = await this.ExecuteQueryAsync(query);
 
             return tags;
         }
 
-        public IEnumerable<TagEntity> GetAllTags()
+        public async Task<IEnumerable<TagEntity>> GetAllTagsAsync()
         {
             var query = new TableQuery<TagEntity>();
 
-            var tags = this.Table.ExecuteQuery(query);
+            var tags = await this.ExecuteQueryAsync(query);
 
             return tags;
         }

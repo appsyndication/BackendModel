@@ -4,7 +4,7 @@ namespace AppSyndication.BackendModel.Data
 {
     public interface ITagTransactionTable : ITableBase
     {
-        TransactionSystemInfoEntity GetSystemInfo();
+        Task<TransactionSystemInfoEntity> GetSystemInfoAsync();
 
         Task<TagTransactionEntity> GetTagTransactionAsync(string channel, string transactionId);
 

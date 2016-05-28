@@ -12,22 +12,13 @@ namespace AppSyndication.BackendModel.Data
         {
         }
 
-        public IEnumerable<RedirectEntity> GetAllRedirects()
+        public async Task<IEnumerable<RedirectEntity>> GetAllRedirectsAsync()
         {
             var query = new TableQuery<RedirectEntity>();
 
-            var results = this.Table.ExecuteQuery(query);
+            var results = await this.ExecuteQueryAsync(query);
 
             return results;
-        }
-
-        public RedirectEntity GetRedirect(string redirectKey)
-        {
-            var op = TableOperation.Retrieve<RedirectEntity>(redirectKey, String.Empty);
-
-            var result = this.Table.Execute(op);
-
-            return (RedirectEntity)result.Result;
         }
 
         public async Task<RedirectEntity> GetRedirectAsync(string redirectKey)

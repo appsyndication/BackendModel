@@ -6,7 +6,7 @@ namespace AppSyndication.BackendModel.Data
 {
     public interface IDownloadTable : ITableBase
     {
-        IEnumerable<DownloadEntity> GetDownloadsSince(DateTime? start);
+        Task<IEnumerable<DownloadEntity>> GetDownloadsSinceAsync (DateTime? start);
 
         Task IncrementDownloadRedirectCountAsync(string key, string ip);
     }
